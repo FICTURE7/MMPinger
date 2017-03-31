@@ -48,18 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\Component\FadeDrawerComponent.cs" />
-    <Compile Include="Controls\Component\MoverComponent.cs" />
-    <Compile Include="Controls\ElComponent.cs" />
-    <Compile Include="Controls\ElForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Controls\PingView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\PingView.Designer.cs">
-      <DependentUpon>PingView.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,9 +56,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Controls\PingView.resx">
-      <DependentUpon>PingView.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="UI\dForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\dPingView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\dPingView.Designer.cs">
+      <DependentUpon>dPingView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User32.cs" />
+    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -83,6 +79,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UI\dPingView.resx">
+      <DependentUpon>dPingView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,6 +95,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

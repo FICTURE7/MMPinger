@@ -31,10 +31,10 @@ namespace MMPinger
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.elValveView1 = new MMPinger.Controls.PingView();
-            this.elValveView2 = new MMPinger.Controls.PingView();
-            this.elValveView3 = new MMPinger.Controls.PingView();
-            this.elValveView4 = new MMPinger.Controls.PingView();
+            this.elValveView1 = new MMPinger.UI.dPingView();
+            this.elValveView2 = new MMPinger.UI.dPingView();
+            this.elValveView3 = new MMPinger.UI.dPingView();
+            this.elValveView4 = new MMPinger.UI.dPingView();
             this.SuspendLayout();
             // 
             // label1
@@ -107,7 +107,6 @@ namespace MMPinger
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "MainForm";
-            this.Opacity = 1D;
             this.Text = "Matchmaking Pinger";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -117,10 +116,10 @@ namespace MMPinger
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private Controls.PingView elValveView1;
-        private Controls.PingView elValveView2;
-        private Controls.PingView elValveView3;
-        private Controls.PingView elValveView4;
+        private UI.dPingView elValveView1;
+        private UI.dPingView elValveView2;
+        private UI.dPingView elValveView3;
+        private UI.dPingView elValveView4;
     }
 }
 

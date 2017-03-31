@@ -1,6 +1,6 @@
-﻿namespace MMPinger.Controls
+﻿namespace MMPinger.UI
 {
-    partial class PingView
+    public partial class dPingView
     {
         /// <summary> 
         /// Required designer variable.
@@ -43,8 +43,7 @@
             this.IPAddressLabel.Size = new System.Drawing.Size(58, 21);
             this.IPAddressLabel.TabIndex = 0;
             this.IPAddressLabel.Text = "0.0.0.0";
-            this.IPAddressLabel.MouseLeave += new System.EventHandler(this.OnMouseLeave);
-            this.IPAddressLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.IPAddressLabel.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             // 
             // PingMsLabel
             // 
@@ -56,8 +55,7 @@
             this.PingMsLabel.Size = new System.Drawing.Size(31, 17);
             this.PingMsLabel.TabIndex = 1;
             this.PingMsLabel.Text = "0ms";
-            this.PingMsLabel.MouseLeave += new System.EventHandler(this.OnMouseLeave);
-            this.PingMsLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.PingMsLabel.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             // 
             // TitleLabel
             // 
@@ -69,8 +67,7 @@
             this.TitleLabel.Size = new System.Drawing.Size(142, 21);
             this.TitleLabel.TabIndex = 2;
             this.TitleLabel.Text = "Unknown Region";
-            this.TitleLabel.MouseLeave += new System.EventHandler(this.OnMouseLeave);
-            this.TitleLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.TitleLabel.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             // 
             // PingView
             // 
@@ -83,8 +80,9 @@
             this.MinimumSize = new System.Drawing.Size(580, 75);
             this.Name = "PingView";
             this.Size = new System.Drawing.Size(580, 75);
+            this.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             this.MouseLeave += new System.EventHandler(this.OnMouseLeave);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseEnter);
             this.ResumeLayout(false);
             this.PerformLayout();
 

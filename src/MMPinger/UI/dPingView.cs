@@ -5,9 +5,9 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Forms;
 
-namespace MMPinger.Controls
+namespace MMPinger.UI
 {
-    public partial class PingView : UserControl
+    public partial class dPingView : UserControl
     {
         // Our color template.
         // Most of those colors come from the Material Design color style.
@@ -19,7 +19,7 @@ namespace MMPinger.Controls
         private static readonly Pen s_orange = new Pen(Color.FromArgb(255, 152, 0)); // -> Bad
         private static readonly Pen s_red = new Pen(Color.FromArgb(239, 83, 80)); // -> Sh*t
 
-        public PingView()
+        public dPingView()
         {
             // Prevent some nasty flickering.
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -28,23 +28,26 @@ namespace MMPinger.Controls
             BackColorChanged += OnBackgroundColorChanged;
 
             InitializeComponent();
+            Interval = 5000;
 
-            _lastPing = DateTime.Now;
-            _nextPing = DateTime.Now.AddSeconds(1);
+            UpdateLastPing();
+
             _timer = new Timer();
             _timer.Interval = 10;
             _timer.Tick += OnTimerTick;
             _timer.Start();
 
-            _currentPingColor = s_gray;
-            _expectedPingColor = s_gray;
+            _currentIndicatorColor = s_gray;
+            _expectedIndicatorColor = s_gray;
             _pinger = new Ping();
         }
 
         #region Fields & Properties
+        // Ping object thats going to send pings to _hostName.
         private readonly Ping _pinger;
-        private Pen _currentPingColor;
-        private Pen _expectedPingColor;
+
+        private Pen _currentIndicatorColor;
+        private Pen _expectedIndicatorColor;
 
         private PingReply _pingReply;
         private IPAddress _ip;
@@ -65,6 +68,10 @@ namespace MMPinger.Controls
                 TitleLabel.Text = Title;
             }
         }
+
+        [Description("Intervals between pings in milliseconds.")]
+        [Category("Behavior")]
+        public int Interval { get; set; }
 
         [Description("Host which this view is going pinging.")]
         [Category("Data")]
@@ -102,51 +109,62 @@ namespace MMPinger.Controls
         public PingReply Reply => _pingReply;
         #endregion
 
+        // To avoid starting a new ping while pinging.
         private bool _pinging;
         // Sends a single ping to HostName asynchronously and updates
         // _pingColor and PingMsLabel and forces a redraw.
         private async void PingAndUpdateAsync()
         {
+            // If we're already pinging, we don't need to start another ping.
             if (_pinging)
                 return;
 
             // If we don't have a host to ping, we exit early.
             if (_hostName == null)
             {
-                _expectedPingColor = s_gray;
+                _expectedIndicatorColor = s_gray;
                 return;
             }
 
-            _lastPing = DateTime.Now;
-            _nextPing = _lastPing.AddSeconds(1);
-
-            // Solid timeout.
-            const int TIMEOUT = 5000;
+            // Prevent the timer from calling this method again.
+            UpdateLastPing();
 
             _pinging = true;
+
+            const int TIMEOUT = 1000;
             // Cause non block I/O is fancy af right.
             var reply = await _pinger.SendPingAsync(_hostName, TIMEOUT);
+
             _pinging = false;
 
             _ip = reply.Address;
             _pingReply = reply;
 
-            // Set the color based on the range.
             var ms = reply.RoundtripTime;
-            if (ms <= 100)
-                _expectedPingColor = s_green;
-            else if (ms <= 150)
-                _expectedPingColor = s_yellow;
-            else if (ms <= 200)
-                _expectedPingColor = s_orange;
-            else if (ms > 200)
-                _expectedPingColor = s_red;
+            // Set the color based on the range.
+            if (reply.Status == IPStatus.Success)
+            {
+                if (ms <= 100)
+                    _expectedIndicatorColor = s_green;
+                else if (ms <= 150)
+                    _expectedIndicatorColor = s_yellow;
+                else if (ms <= 200)
+                    _expectedIndicatorColor = s_orange;
+                else if (ms > 200)
+                    _expectedIndicatorColor = s_red;
+            }
             else
-                _expectedPingColor = s_gray;
+            {
+                _expectedIndicatorColor = s_gray;
+            }
 
             PingMsLabel.Text = ms + "ms";
-            // Redraw the PingerView and the child controls.
-            Refresh();
+        }
+
+        private void UpdateLastPing()
+        {
+            _lastPing = DateTime.Now;
+            _nextPing = _lastPing.AddMilliseconds(Interval);
         }
 
         // Change the BackColor and the label's BackColor to the specified color.
@@ -171,7 +189,7 @@ namespace MMPinger.Controls
             // Draws an outline around the control.
             graphics.DrawRectangle(s_gray, new Rectangle(0, 0, Size.Width - 1, Size.Height - 1));
             // Then we draw the 'connection state rectangle' with the corresponding color code.
-            graphics.FillRectangle(_currentPingColor.Brush, leftColorIndicator);
+            graphics.FillRectangle(_currentIndicatorColor.Brush, leftColorIndicator);
 
             base.OnPaint(e);
         }
@@ -194,62 +212,42 @@ namespace MMPinger.Controls
         {
             // Sends a new ping at the expected time.
             if (DateTime.Now >= _nextPing)
-                PingAndUpdateAsync();
+                PingAndUpdateAsync(); 
 
             var backColorLerpTime = (DateTime.Now - _mouseOverTime);
-            var pingColorLerpTime = (DateTime.Now - _lastPing);
+            // A 100 milliseconds lerp;
+            var backColorPerc = (float)backColorLerpTime.TotalMilliseconds / 100f;
 
-            var backColorPerc = ((float)backColorLerpTime.TotalMilliseconds / 100f) + 0.05f;
-            var pingColorPerc = (float)pingColorLerpTime.TotalMilliseconds / 1000f;
+            var indicatorLerpTime = (DateTime.Now - _lastPing);
+            // A 5 seconds lerp.
+            var indicatorColorPerc = (float)indicatorLerpTime.TotalMilliseconds / 5000f;
 
-            _currentPingColor = new Pen(Lerp(_currentPingColor.Color, _expectedPingColor.Color, pingColorPerc));
-            Refresh();
+            _currentIndicatorColor = new Pen(Utils.Lerp(_currentIndicatorColor.Color, _expectedIndicatorColor.Color, indicatorColorPerc));
 
             if (_mouseOver)
             {
                 // Turn background color to the gray color using a lerping function.
-                ChangeBackColor(Lerp(BackColor, s_gray.Color, backColorPerc));
+                ChangeBackColor(Utils.Lerp(BackColor, s_gray.Color, backColorPerc));
             }
             else
             {
                 // Turn background color to the default color using a lerping function.
-                ChangeBackColor(Lerp(BackColor, _defaultColor, backColorPerc));
+                ChangeBackColor(Utils.Lerp(BackColor, _defaultColor, backColorPerc));
             }
+
+            Refresh();
         }
 
         // Determine if mouse is over the control
         private bool _mouseOver;
         // Time of when the mouse was over the control
         private DateTime _mouseOverTime;
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void OnMouseEnter(object sender, EventArgs e)
         {
             _mouseOver = true;
             _mouseOverTime = DateTime.Now;
         }
 
-        private void OnMouseLeave(object sender, EventArgs e)
-        {
-            _mouseOver = false;
-        }
-
-        // Our linear color interpolation which uses the float overload of Lerp.
-        private static Color Lerp(Color a, Color b, float amount)
-        {
-            // Do some clamping.
-            if (amount > 1)
-                amount = 1;
-
-            var r = (int)Lerp(a.R, b.R, amount);
-            var g = (int)Lerp(a.G, b.G, amount);
-            var b1 = (int)Lerp(a.B, b.B, amount);
-
-            return Color.FromArgb(r, g, b1);
-        }
-
-        // Our linear interpolation.
-        private static float Lerp(float a, float b, float amount)
-        {
-            return a + (b - a) * amount;
-        }
+        private void OnMouseLeave(object sender, EventArgs e) => _mouseOver = false;
     }
 }
