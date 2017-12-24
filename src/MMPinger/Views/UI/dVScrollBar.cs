@@ -47,6 +47,8 @@ namespace MMPinger.Views.UI
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            SolidBrush darkestGray = new SolidBrush(Color.FromArgb(11, 11, 11));
+            SolidBrush darkerGray = new SolidBrush(Color.FromArgb(20, 20, 20));
             SolidBrush gray = new SolidBrush(Color.FromArgb(33, 33, 33));
 
             // Height of the content inside of the ScrollableControl.
@@ -56,13 +58,19 @@ namespace MMPinger.Views.UI
 
             int width = Size.Width;
             int height = (int)((visibleHeight / contentHeight) * visibleHeight);
+            int radius = width / 2;
 
-            // X value of the custom scroll rectangle.
-            int x = WrapControl == null ? 0 : (int)((WrapControl.VerticalScroll.Value / (float)(WrapControl.VerticalScroll.Maximum - WrapControl.VerticalScroll.LargeChange)) * (visibleHeight - height));
+            // Y value of the custom scroll rectangle.
+            int y = WrapControl == null ? 0 : (int)((WrapControl.VerticalScroll.Value / (float)(WrapControl.VerticalScroll.Maximum - WrapControl.VerticalScroll.LargeChange)) * (visibleHeight - height));
 
-            _knobRect = new Rectangle(0, x, width, height);
+            _knobRect = new Rectangle(0, y, width, height);
 
-            FillRoundedRectangle(gray, _knobRect, e.Graphics);
+            FillRoundedRectangle(gray, new Rectangle(0, 0, width, Size.Height), e.Graphics);
+            FillRoundedRectangle(darkerGray, new Rectangle(-radius, y - radius, width + width, height + width), e.Graphics);
+            FillRoundedRectangle(darkestGray, _knobRect, e.Graphics);
+
+            gray.Dispose();
+            darkestGray.Dispose();
             base.OnPaint(e);
         }
 
@@ -106,17 +114,12 @@ namespace MMPinger.Views.UI
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.Location.Y >= _knobRect.Y && e.Location.Y <= _knobRect.Y + _knobRect.Height &&
-                e.Location.X >= _knobRect.X && e.Location.X <= _knobRect.X + _knobRect.Width)
-                _mouseOverKnob = true;
-            else
-                _mouseOverKnob = false;
-
+            _mouseOverKnob = _knobRect.Contains(e.Location);
             if (_mouseDownKnob)
             {
                 int max = WrapControl.VerticalScroll.Maximum;
                 int min = WrapControl.VerticalScroll.Minimum;
-                int value = Utils.Clamp(e.Y, min, max);
+                int value = Utils.Clamp((int)(((float)e.Y / Size.Height) * WrapControl.VerticalScroll.Maximum), min, max);
 
                 WrapControl.VerticalScroll.Value = value;
 
