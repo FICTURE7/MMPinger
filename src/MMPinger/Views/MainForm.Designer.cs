@@ -47,33 +47,37 @@ namespace MMPinger.Views
             // titleLabel
             // 
             this.titleLabel.AutoSize = true;
-            this.titleLabel.Font = new System.Drawing.Font("Segoe UI Black", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.titleLabel.Location = new System.Drawing.Point(5, 13);
+            this.titleLabel.BackColor = System.Drawing.Color.Transparent;
+            this.titleLabel.Font = new System.Drawing.Font("Segoe UI Black", 8.5F, System.Drawing.FontStyle.Bold);
+            this.titleLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.titleLabel.Location = new System.Drawing.Point(8, 2);
             this.titleLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(347, 37);
+            this.titleLabel.Size = new System.Drawing.Size(155, 15);
             this.titleLabel.TabIndex = 0;
             this.titleLabel.Text = "MATCHMAKING PINGER";
             // 
             // exitButton
             // 
+            this.exitButton.BackColor = System.Drawing.Color.Transparent;
             this.exitButton.FlatAppearance.BorderSize = 0;
             this.exitButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Maroon;
             this.exitButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkRed;
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitButton.Location = new System.Drawing.Point(566, 0);
+            this.exitButton.Location = new System.Drawing.Point(591, 0);
+            this.exitButton.Margin = new System.Windows.Forms.Padding(0);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(30, 30);
+            this.exitButton.Size = new System.Drawing.Size(19, 19);
             this.exitButton.TabIndex = 7;
             this.exitButton.Text = "x";
-            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.UseVisualStyleBackColor = false;
             this.exitButton.Click += new System.EventHandler(this.exitButtonClick);
             // 
             // outerPanel
             // 
             this.outerPanel.Controls.Add(this.innerPanel);
-            this.outerPanel.Location = new System.Drawing.Point(6, 55);
+            this.outerPanel.Location = new System.Drawing.Point(6, 24);
             this.outerPanel.Name = "outerPanel";
             this.outerPanel.Size = new System.Drawing.Size(587, 345);
             this.outerPanel.TabIndex = 10;
@@ -88,9 +92,9 @@ namespace MMPinger.Views
             // 
             // dScroll1
             // 
-            this.dScroll1.Location = new System.Drawing.Point(599, 55);
+            this.dScroll1.Location = new System.Drawing.Point(599, 24);
             this.dScroll1.Name = "dScroll1";
-            this.dScroll1.Size = new System.Drawing.Size(10, 336);
+            this.dScroll1.Size = new System.Drawing.Size(8, 333);
             this.dScroll1.TabIndex = 11;
             this.dScroll1.WrapControl = this.innerPanel;
             // 
@@ -99,7 +103,7 @@ namespace MMPinger.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.ClientSize = new System.Drawing.Size(618, 400);
+            this.ClientSize = new System.Drawing.Size(610, 375);
             this.Controls.Add(this.dScroll1);
             this.Controls.Add(this.outerPanel);
             this.Controls.Add(this.exitButton);

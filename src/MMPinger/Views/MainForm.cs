@@ -1,6 +1,8 @@
 ﻿using MMPinger.Models;
 using MMPinger.UI;
 using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MMPinger.Views
 {
@@ -17,6 +19,14 @@ namespace MMPinger.Views
             Close();
         }
         #endregion
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            SolidBrush darkerGray = new SolidBrush(Color.FromArgb(11, 11, 11));
+            e.Graphics.FillRectangle(darkerGray, new Rectangle(0, 0, Size.Width, 19));
+            darkerGray.Dispose();
+            base.OnPaint(e);
+        }
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
