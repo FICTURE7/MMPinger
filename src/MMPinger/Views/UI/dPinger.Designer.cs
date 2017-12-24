@@ -37,10 +37,10 @@
             // 
             this.IPAddressLabel.AutoSize = true;
             this.IPAddressLabel.BackColor = System.Drawing.Color.Transparent;
-            this.IPAddressLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IPAddressLabel.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IPAddressLabel.Location = new System.Drawing.Point(20, 30);
             this.IPAddressLabel.Name = "IPAddressLabel";
-            this.IPAddressLabel.Size = new System.Drawing.Size(58, 21);
+            this.IPAddressLabel.Size = new System.Drawing.Size(72, 19);
             this.IPAddressLabel.TabIndex = 0;
             this.IPAddressLabel.Text = "0.0.0.0";
             this.IPAddressLabel.MouseEnter += new System.EventHandler(this.OnMouseEnter);
@@ -69,7 +69,7 @@
             this.TitleLabel.Text = "Unknown Region";
             this.TitleLabel.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             // 
-            // PingView
+            // dPinger
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.TitleLabel);
@@ -78,7 +78,7 @@
             this.DoubleBuffered = true;
             this.MaximumSize = new System.Drawing.Size(580, 75);
             this.MinimumSize = new System.Drawing.Size(580, 75);
-            this.Name = "PingView";
+            this.Name = "dPinger";
             this.Size = new System.Drawing.Size(580, 75);
             this.MouseEnter += new System.EventHandler(this.OnMouseEnter);
             this.MouseLeave += new System.EventHandler(this.OnMouseLeave);
