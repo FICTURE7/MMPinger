@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Net;
@@ -7,9 +8,9 @@ using System.Windows.Forms;
 
 namespace MMPinger.UI
 {
-    public partial class dPingView : UserControl
+    public partial class dPinger : UserControl
     {
-        // Our color template.
+        // Color template.
         // Most of those colors come from the Material Design color style.
         // Found here: https://material.google.com/style/color.html
         private static readonly Pen s_gray = new Pen(Color.FromArgb(33, 33, 33));
@@ -19,7 +20,7 @@ namespace MMPinger.UI
         private static readonly Pen s_orange = new Pen(Color.FromArgb(255, 152, 0)); // -> Bad
         private static readonly Pen s_red = new Pen(Color.FromArgb(239, 83, 80)); // -> Sh*t
 
-        public dPingView()
+        public dPinger()
         {
             // Prevent some nasty flickering.
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
@@ -40,6 +41,8 @@ namespace MMPinger.UI
             _currentIndicatorColor = s_gray;
             _expectedIndicatorColor = s_gray;
             _pinger = new Ping();
+            _badIps = new List<IPAddress>();
+            _ips = new List<IPAddress>();
         }
 
         #region Fields & Properties
@@ -51,6 +54,10 @@ namespace MMPinger.UI
 
         private PingReply _pingReply;
         private IPAddress _ip;
+
+        private List<IPAddress> _badIps;
+        private List<IPAddress> _ips;
+
         private string _title;
         private string _hostName;
 
@@ -88,6 +95,24 @@ namespace MMPinger.UI
                 {
                     IPAddressLabel.Text = _hostName;
 
+                    if (value.Contains("/"))
+                    {
+                        string[] split = value.Split('/');
+                        var baseIp = IPAddress.Parse(split[0]);
+                        int range = int.Parse(split[1]);
+
+                        for (int i = 1; i < range + 1; i++)
+                        {
+                            var address = baseIp.GetAddressBytes();
+                            address[3] = (byte)i;
+
+                            var ip = new IPAddress(address);
+                            _ips.Add(ip);
+                        }
+
+                        _ip = _ips[0];
+                    }
+
                     // Be sort of 'reactive'.
                     PingAndUpdateAsync();
                 }
@@ -120,7 +145,7 @@ namespace MMPinger.UI
                 return;
 
             // If we don't have a host to ping, we exit early.
-            if (_hostName == null)
+            if (_ip == null)
             {
                 _expectedIndicatorColor = s_gray;
                 return;
@@ -133,11 +158,11 @@ namespace MMPinger.UI
 
             const int TIMEOUT = 1000;
             // Cause non block I/O is fancy af right.
-            var reply = await _pinger.SendPingAsync(_hostName, TIMEOUT);
+            var reply = await _pinger.SendPingAsync(_ip, TIMEOUT);
 
             _pinging = false;
 
-            _ip = reply.Address;
+            //_ip = reply.Address;
             _pingReply = reply;
 
             var ms = reply.RoundtripTime;
@@ -212,7 +237,7 @@ namespace MMPinger.UI
         {
             // Sends a new ping at the expected time.
             if (DateTime.Now >= _nextPing)
-                PingAndUpdateAsync(); 
+                PingAndUpdateAsync();
 
             var backColorLerpTime = (DateTime.Now - _mouseOverTime);
             // A 100 milliseconds lerp;

@@ -1,6 +1,6 @@
 ﻿namespace MMPinger.UI
 {
-    public partial class dPingView
+    public partial class dPinger
     {
         /// <summary> 
         /// Required designer variable.

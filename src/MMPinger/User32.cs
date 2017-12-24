@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MMPinger.UI
+namespace MMPinger
 {
+    // Binding to User32 functions.
     internal static class User32
     {
         public  const int WM_NCLBUTTONDOWN = 0xA1;

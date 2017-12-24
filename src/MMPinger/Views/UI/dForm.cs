@@ -70,8 +70,7 @@ namespace MMPinger.UI
             }
 
             _disposed = true;
-
-            Dispose();
+            base.Dispose(disposing);
         }
     }
 }
